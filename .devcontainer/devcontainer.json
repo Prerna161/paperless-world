@@ -1,0 +1,17 @@
+{
+  "name": "Paperless World Dev Environment",
+  "image": "mcr.microsoft.com/devcontainers/java:1-17-bullseye",
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/mysql-client:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "formulahendry.terminal"
+      ]
+    }
+  },
+  "forwardPorts": [8080, 3306],
+  "postCreateCommand": "mvn clean compile"
+}

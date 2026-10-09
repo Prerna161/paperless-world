@@ -1,0 +1,88 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paperless World</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style.css">
+</head>
+<body>
+
+<c:if test="${not empty sessionScope.user_id}">
+    <!-- Demo Time Machine Banner (PRD Section 8, 16.3 item 7) -->
+    <div class="demo-clock-bar">
+        <div class="demo-clock-info">
+            <span class="demo-badge">Time Machine</span>
+            <c:choose>
+                <c:when test="${offsetDays > 0}">
+                    <span style="color:#f59e0b; font-weight:700;">Demo clock: +${offsetDays} days (simulated)</span>
+                </c:when>
+                <c:otherwise>
+                    <span>System clock (real-time): <span class="virtual-date">${virtualToday}</span></span>
+                </c:otherwise>
+            </c:choose>
+        </div>
+        <div class="demo-clock-controls">
+            <form action="${pageContext.request.contextPath}/demo/clock" method="post" style="display:inline;">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
+                <input type="hidden" name="days" value="15">
+                <input type="hidden" name="redirect" value="${pageContext.request.requestURI}">
+                <button type="submit" class="btn-clock" title="Advance time by 15 days as in 60-second wow demo">+15 Days</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/demo/run" method="post" style="display:inline;">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
+                <input type="hidden" name="redirect" value="${pageContext.request.requestURI}">
+                <button type="submit" class="btn-clock" style="background:rgba(245,158,11,0.25); border-color:#f59e0b; color:#fbbf24;" title="Execute resurfacing scan now">Run Resurfacing Now</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/demo/clock" method="post" style="display:inline;">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
+                <input type="hidden" name="action" value="reset">
+                <input type="hidden" name="redirect" value="${pageContext.request.requestURI}">
+                <button type="submit" class="btn-clock btn-clock-reset" title="Reset virtual clock">Reset</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navigation Header (PRD Section 16.1) -->
+    <nav class="navbar">
+        <a href="${pageContext.request.contextPath}/home" class="brand">
+            <div class="brand-icon">∞</div>
+            <div>
+                <div class="brand-title">Paperless World</div>
+                <div class="brand-tagline">Nothing lost · Nothing open forever</div>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="${pageContext.request.contextPath}/home" class="nav-link">Home</a>
+            <a href="${pageContext.request.contextPath}/inbox" class="nav-link">
+                Inbox <span class="pill-count">${inboxCount}</span>
+            </a>
+            <a href="${pageContext.request.contextPath}/thoughts?state=OPEN" class="nav-link">
+                Open <span class="pill-count">${openCount}</span>
+            </a>
+            <a href="${pageContext.request.contextPath}/thoughts?state=CLOSED" class="nav-link">
+                Closed <span class="pill-count">${closedCount}</span>
+            </a>
+            <span style="color: var(--text-muted); font-size: 0.85rem;">|</span>
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">[${sessionScope.display_name}]</span>
+            <form action="${pageContext.request.contextPath}/logout" method="post" style="display:inline; margin:0;">
+                <input type="hidden" name="_csrf" value="${csrfToken}">
+                <button type="submit" class="btn-sm btn-close" style="cursor:pointer;">Logout</button>
+            </form>
+        </div>
+    </nav>
+</c:if>
+
+<div class="container">
+    <c:if test="${not empty flashSuccess}">
+        <div style="background:rgba(16,185,129,0.15); border:1px solid #10b981; color:#6ee7b7; padding:12px 18px; border-radius:var(--radius-md); margin-bottom:20px; font-size:0.9rem;">
+            <strong>Success:</strong> <c:out value="${flashSuccess}"/>
+        </div>
+    </c:if>
+    <c:if test="${not empty flashError}">
+        <div class="alert-error">
+            <strong>Notice:</strong> <c:out value="${flashError}"/>
+        </div>
+    </c:if>

@@ -1,0 +1,95 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+</div> <!-- /container -->
+
+<!-- Modal: Close Loop with Mandatory Reason (PRD Section 16.3 item 3) -->
+<div id="closeModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); backdrop-filter:blur(5px); z-index:200; align-items:center; justify-content:center;">
+    <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-lg); padding:28px; width:90%; max-width:480px; box-shadow:var(--shadow-md);">
+        <h3 style="font-size:1.2rem; margin-bottom:8px; color:#fff;">Close Open Loop</h3>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:20px;">
+            A thought cannot silently disappear. Choose a deliberate closure decision:
+        </p>
+        <form action="${pageContext.request.contextPath}/thoughts/close" method="post">
+            <input type="hidden" name="_csrf" value="${csrfToken}">
+            <input type="hidden" name="id" id="closeThoughtId" value="">
+
+            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:24px;">
+                <label style="display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.04); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-color); cursor:pointer;">
+                    <input type="radio" name="reason" value="DONE" checked style="margin-top:4px;">
+                    <div>
+                        <strong style="color:#34d399;">DONE</strong>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">Acted on and finished.</div>
+                    </div>
+                </label>
+                <label style="display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.04); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-color); cursor:pointer;">
+                    <input type="radio" name="reason" value="LET_GO" style="margin-top:4px;">
+                    <div>
+                        <strong style="color:#f87171;">LET_GO</strong>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">Deliberately dropped and concluded not worth pursuing.</div>
+                    </div>
+                </label>
+                <label style="display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.04); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border-color); cursor:pointer;">
+                    <input type="radio" name="reason" value="RECORDED" style="margin-top:4px;">
+                    <div>
+                        <strong style="color:#93c5fd;">RECORDED</strong>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">Kept as reference; no further action needed.</div>
+                    </div>
+                </label>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button type="button" onclick="closeModal()" class="btn-sm btn-close" style="background:transparent; border:1px solid var(--border-color); color:var(--text-secondary);">Cancel</button>
+                <button type="submit" class="btn-primary" style="padding:7px 18px;">Confirm Closure</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Attach Dated Action (PRD Section 16.2) -->
+<div id="actionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); backdrop-filter:blur(5px); z-index:200; align-items:center; justify-content:center;">
+    <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-lg); padding:28px; width:90%; max-width:480px; box-shadow:var(--shadow-md);">
+        <h3 style="font-size:1.2rem; margin-bottom:8px; color:#fff;">Add Next Action</h3>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:16px;">
+            Turn this thought into a concrete, dated commitment:
+        </p>
+        <form action="${pageContext.request.contextPath}/actions/add" method="post">
+            <input type="hidden" name="_csrf" value="${csrfToken}">
+            <input type="hidden" name="thought_id" id="actionThoughtId" value="">
+            <input type="hidden" name="redirect" value="${pageContext.request.requestURI}">
+
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-size:0.8rem; color:var(--text-secondary); margin-bottom:6px;">Action Description:</label>
+                <input type="text" name="description" required placeholder="e.g. Reply to advisor, verify pool leak..." style="width:100%; background:rgba(15,23,42,0.8); border:1px solid var(--border-color); padding:10px; border-radius:var(--radius-sm); color:#fff;">
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-size:0.8rem; color:var(--text-secondary); margin-bottom:6px;">Due Date (Optional):</label>
+                <input type="date" name="due_date" value="${virtualToday}" style="width:100%; background:rgba(15,23,42,0.8); border:1px solid var(--border-color); padding:10px; border-radius:var(--radius-sm); color:#fff;">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button type="button" onclick="closeActionModal()" class="btn-sm btn-close" style="background:transparent; border:1px solid var(--border-color); color:var(--text-secondary);">Cancel</button>
+                <button type="submit" class="btn-primary" style="padding:7px 18px;">Add Action</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openCloseModal(id) {
+    document.getElementById('closeThoughtId').value = id;
+    document.getElementById('closeModal').style.display = 'flex';
+}
+function closeModal() {
+    document.getElementById('closeModal').style.display = 'none';
+}
+function openActionModal(id) {
+    document.getElementById('actionThoughtId').value = id;
+    document.getElementById('actionModal').style.display = 'flex';
+}
+function closeActionModal() {
+    document.getElementById('actionModal').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

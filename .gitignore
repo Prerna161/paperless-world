@@ -1,0 +1,23 @@
+# Build output
+target/
+*.war
+
+# IDE files
+*.iml
+.idea/
+.vscode/
+.settings/
+.project
+.classpath
+
+# Credentials and environment
+src/main/webapp/META-INF/context.xml
+.env
+*.local
+
+# Logs and OS files
+*.log
+sources.txt
+test_sources.txt
+.DS_Store
+Thumbs.db
